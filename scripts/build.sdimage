@@ -32,7 +32,7 @@ mdir=$(which mdir)
 [ "$mdir" ] || FAIL mdir
 
 mcopy=$(which mcopy)
-[ "$mdir" ] || FAIL mdir
+[ "$mcopy" ] || FAIL mcopy
 
 dd=$(which dd)
 [ "$dd" ] || FAIL dd
