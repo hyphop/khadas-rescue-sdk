@@ -1,0 +1,61 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= build lib
+
+[ "$PR" ] || {
+
+DR=$(dirname "$0")    #DR - current dir  rel path
+PA=$(realpath "$0")   #PA - current file abs path
+DA=$(dirname "$PA")   #DA - current dir  abs path
+PN=$(basename "$0")   #PN - current name
+PR="$0"               #PR - current file rel path
+
+. $DR/build.conf
+#. $DR/build.lib
+
+case $PATH in
+    */opt/bin:*);;
+    *)PATH="$DA/../opt/bin:$DA:$PATH";;
+esac
+
+}
+
+CMD(){
+    echo "[#] $@">&2
+    "$@"
+}
+
+[ "$DOWNLOADS" ] || \
+    mkdir -p "$DOWNLOADS"
+
+export DOWNLOADS="$DOWNLOADS"
+
+FAIL(){
+    echo "[e] stop fail $@">&2
+    exit 1
+}
+
+
+R=
+DL() {
+    R=
+    . "$DA/download"
+}
+
+T=
+UNPACK(){
+    T=
+    case $1 in
+    *.tar.*)
+    T=${1%.tar.*}
+    [ "$2" ] && T=$2
+    [ -d "$T" ] || mkdir -p "$T"
+    CMD tar -C "$T" -xf  "$1"
+    ;;
+    *)
+    echo "[i] undef format $1">&2
+    return 1
+    esac
+}

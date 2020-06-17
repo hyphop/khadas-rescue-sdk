@@ -1,0 +1,12 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= generate rootfs done
+
+. $(dirname "$0")/build.lib
+
+DONE_=$(date +%s)
+DURATION_=$((DONE_-BEGIN_))
+
+echo "[i] IS DONE // duration: $DURATION_ s"

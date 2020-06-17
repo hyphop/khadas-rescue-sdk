@@ -1,0 +1,41 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= build krescue rootfs
+
+## USAGE: ./build
+
+. $0.lib
+
+for p in $@; do
+
+    case $p in
+	-u)
+	OPKG_NO_UPDATE=1
+	;;
+	*)
+	echo "[w] unknown param $p">&2
+	exit 1
+	;;
+    esac
+
+done
+
+echo "[i] MASTER BUILD KRESCUE ">&2
+
+## check
+REQUIRED="curl"
+
+echo "[i] check required: $REQUIRED">&2
+
+for t in $REQUIRED ; do
+    c=$(which $t) || FAIL $t not found
+done
+
+. $PR.begin
+
+. $PR.fatfs
+. $PR.sdimage
+
+. $PR.done

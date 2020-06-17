@@ -1,0 +1,68 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= build krescue rootfs
+
+## USAGE: ./build
+
+. $(dirname "$0")/build.lib
+
+echo "[i] MAKE SD IMAGE ">&2
+
+[ -d "$KTMP" ] || \
+    CMD mkdir -p "$KTMP"
+
+IMAGE="$KTMP/$LABEL.mmc.image.img"
+
+[ "$FATFS" ] || \
+    FATFS="$KTMP/$LABEL.fat.fs.dir"
+
+[ -d "$FATFS" ] || FAIL not found $FATFS
+
+OF=3200 ## 1638400 bytes UBOOT AREA before $((512*32*100))
+IS=$((64*1024*1024)) # image total size 64M
+
+BS=512
+
+sfdisk=$(which sfdisk)
+[ "$sfdisk" ] || FAIL sfdisk
+
+mdir=$(which mdir)
+[ "$mdir" ] || FAIL mdir
+
+mcopy=$(which mcopy)
+[ "$mdir" ] || FAIL mdir
+
+dd=$(which dd)
+[ "$dd" ] || FAIL dd
+
+mkfs_vfat=$(which mkfs.vfat)
+[ "$mkfs_vfat" ] || FAIL mkfs.vfat
+
+F="$IMAGE.vfat"
+
+FR=$(realpath "$IMAGE.vfat")
+
+(
+printf "\n##KRESCUE_INFO\n"
+echo "hash: $HASH"
+echo "date: $DATE"
+echo "time: $TIME"
+echo "size: $S"
+echo "part: $PART_"
+echo "builder: hyphop"
+printf "\n##KRESCUE-INFO\n"
+) > $F.msg
+
+CMD $dd if=/dev/zero bs=$BS count=$((IS/$BS - $OF)) of=$F
+CMD $mkfs_vfat -n rescue -i DEADBEEF -m $F.msg $F
+CMD $mdir -i $F ::
+
+cd $FATFS
+
+CMD $mcopy -sp -i $FR $(ls --group-directories-first .) ::
+CMD $mdir -i $F -/ ::
+
+cd -
+

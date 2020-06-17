@@ -1,0 +1,7 @@
+!.gitignore
+/bin
+/dl
+/opt
+/work
+/tmp
+!README.md

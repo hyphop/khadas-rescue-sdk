@@ -1,0 +1,12 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= generate rootfs begin
+
+. $(dirname "$0")/build.lib
+
+BEGIN_=$(date +%s)
+
+echo "[i] BEGIN $BEGIN_"
+

@@ -1,0 +1,3 @@
+language: c
+dist: bionic
+script:  scripts/prepare && scripts/build 
