@@ -33,7 +33,5 @@ cd $D
 #make clean
 
 make $MAKE_MT && \
-    cp mtools mcopy -a $PRE2/bin
+    cp mdir mtools mcopy -a $PRE2/bin
     
-
-
