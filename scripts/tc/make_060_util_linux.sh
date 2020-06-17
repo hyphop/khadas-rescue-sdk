@@ -27,8 +27,8 @@ D=${PKG%.tar.*}
 
 cd *$D
 
-./autogen.sh
-./configure --prefix="$PRE2"
+./autogen.sh || exit 1
+./configure --prefix="$PRE2" || exit 1
 
 make $MAKE_MT && \
     make install-usrlib_execLTLIBRARIES 2>/dev/null && \

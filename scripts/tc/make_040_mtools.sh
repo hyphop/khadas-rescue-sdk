@@ -14,7 +14,7 @@ PKG=$NAME-$VER.tar.gz
 
 echo "[i] make $PKG">&2
 
-../download ftp://ftp.gnu.org/gnu/mtools/$PKG || exit 1
+../download https://ftp.gnu.org/gnu/mtools/$PKG || exit 1
 
 cd $DL
 
@@ -25,7 +25,7 @@ D=${PKG%.tar.*}
 
 cd $D
 
-./configure --prefix="$PRE2"
+./configure --prefix="$PRE2" || exit 1
 
 #export EXTRA_CFLAGS="-I$PRE2/include"
 #export EXTRA_LDFLAGS="-L$PRE2/lib -Wl,-rpath=$PRE2/lib"
