@@ -1,0 +1,20 @@
+menu title PXE BOOT
+
+menu background splash.bmp
+
+LABEL krescue
+ MENU label krescue
+ LINUX uImage
+ INITRD uInitrd
+ FDTDIR fdt-kresq
+ APPEND root=/dev/ram0 rw init=/init.squashf panic=10 net.ifnames=0 loglevel=9  video=HDMI-A-1:1920x1080@60e console=tty0 console=ttyAML0,115200n8 console=ttyS0,115200n8 fbcon=font:TER16x32 osd12 samba-peace-krescue samba-peace-krescue_dump wifi.config=OWVIM3:qweqweqwe123 wifi.config.ap=Krescue
+
+LABEL localboot
+ MENU label localboot
+ LOCALBOOT 1
+
+timeout 20
+
+default krescue
+
+

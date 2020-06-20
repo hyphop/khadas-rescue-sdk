@@ -1,0 +1,88 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= build krescue rootfs
+
+## USAGE: ./build
+
+. $(dirname "$0")/build.lib
+
+echo "[i] MAKE FATFS ">&2
+
+CP(){
+    CMD cp -Lr $@
+}
+MD(){
+    CMD mkdir -p $@
+}
+
+[ -d "$KTMP" ] || MD "$KTMP"
+
+FATFS="$KTMP/$LABEL.fs.dir"
+
+[ -d "$FATFS" ] || \
+    mkdir -p "$FATFS"
+
+EX(){
+    #echo $@
+    CMD tar -xf "$1" -C"$2" --wildcards "$3"
+}
+
+RM(){
+    CMD rm $@
+}
+
+CAT(){
+    echo "# cat $@" >&2
+    cat $@
+}
+cd $FATFS
+
+####
+
+rescue=rescue
+
+ uinitrd=$rescue/uInitrd
+ uimage=$rescue/uImage
+
+[ -d "$rescue" ] && \
+rm -rf $rescue
+
+FDTQ=$rescue/fdt.kresq
+
+MD $rescue $FDTQ boot
+CP $ROOTFS_UIMAGE	$uinitrd
+CP $KERNEL_UIMAGE_SD	$uimage
+EX $KERNEL_FDT_TAR	$rescue '*.dtb'
+
+for q in $rescue/fdt/*/*kresq.dtb; do
+    qq=${q#$rescue/fdt/}
+    qn=${qq%-kresq*}
+    qd="$FDTQ/${qn%/*}"
+    qf="$FDTQ/$qn"
+    echo "$qd"
+    [ -d "$qd" ] || mkdir -p $qd
+    mv "$q" "$qf.dtb"
+done
+
+CMD $mkimage -C none -A arm -T script -d $FILES/rescue.cmd $rescue/rescue.scr
+
+cat $rescue/rescue.scr | tee >/dev/null \
+    boot.scr.uimg s905_autoscript aml_autoscript cfgload
+
+cat $FILES/boot.ini $FILES/rescue.cmd | tee >/dev/null \
+    boot/boot.ini boot.ini
+
+#   $FILES/tftp \
+
+CP  $FILES/splash.bmp.gz splash.bmp
+
+CP  $FILES/*_env.txt \
+    $FILES/rescue.cmd \
+    $rescue
+
+####
+
+cd - >/dev/null
+

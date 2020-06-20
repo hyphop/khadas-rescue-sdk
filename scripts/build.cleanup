@@ -1,0 +1,19 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= build krescue rootfs
+
+## USAGE: ./build
+
+. $(dirname "$0")/build.lib
+
+echo "[i] CLEANUP ">&2
+
+cd "$KTMP"
+
+rm *.img
+rm *.img.vfat
+rm -rf *.dir
+
+cd - 1>/dev/null

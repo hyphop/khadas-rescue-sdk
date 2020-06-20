@@ -1,0 +1,35 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= build krescue rootfs
+
+## USAGE: ./build
+
+. $(dirname "$0")/build.lib
+
+echo "[i] MAKE BOARDS IMAGES ">&2
+
+cd "$KTMP" || FAIL oops 
+
+for B in $BOARDS; do
+    U=$UBOOTS/$B.u-boot.sd.bin
+    [ -s "$U" ] && {
+	echo "$B "
+	O="$B.$IMAGE_UNI"
+	cp $IMAGE $O
+	## UBOOT COPY
+	dd if=$U bs=$((512*64)) conv=fsync,notrunc of=$O 2>/dev/null
+	## WRITE PTABLE
+	dd if=$IMAGE count=1    conv=fsync,notrunc of=$O 2>/dev/null
+	## FIX UBOOT
+	dd if=$U count=1 bs=444 conv=fsync,notrunc of=$O 2>/dev/null
+	##
+	pigz -1c "$O" > "$O.gz"
+#	rm "$O"
+    }
+done
+
+pigz -1c "$IMAGE" > "$IMAGE.gz"
+#
+cd - 1>/dev/null

@@ -1,0 +1,18 @@
+menu title PXE BOOT
+
+menu background splash.bmp
+
+LABEL krescue
+ MENU label krescue test 
+ LINUX uImage
+ INITRD uInitrd
+ FDTDIR fdt-kresq
+ APPEND root=/dev/ram0 rw init=/init.squashf panic=10 net.ifnames=0 loglevel=9 console=tty0 console=uart8250,mmio32,0xff1a0000 booted=net  fbcon=font:TER16x32 wifi.config=OWVIM3:qweqweqwe123 samba-peace-krescue samba-peace-krescue_dump
+
+LABEL localboot
+ MENU label localboot
+ LOCALBOOT 1
+
+timeout 20
+
+default krescue

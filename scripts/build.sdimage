@@ -13,17 +13,7 @@ echo "[i] MAKE SD IMAGE ">&2
 [ -d "$KTMP" ] || \
     CMD mkdir -p "$KTMP"
 
-IMAGE="$KTMP/$LABEL.mmc.image.img"
-
-[ "$FATFS" ] || \
-    FATFS="$KTMP/$LABEL.fat.fs.dir"
-
 [ -d "$FATFS" ] || FAIL not found $FATFS
-
-OF=3200 ## 1638400 bytes UBOOT AREA before $((512*32*100))
-IS=$((64*1024*1024)) # image total size 64M
-
-BS=512
 
 sfdisk=$(which sfdisk)
 [ "$sfdisk" ] || FAIL sfdisk
@@ -55,14 +45,23 @@ echo "builder: hyphop"
 printf "\n##KRESCUE-INFO\n"
 ) > $F.msg
 
-CMD $dd if=/dev/zero bs=$BS count=$((IS/$BS - $OF)) of=$F
+CMD $dd if=/dev/zero bs=$BS count=$((IS/BS - OF)) of=$F 2>/dev/null
 CMD $mkfs_vfat -n rescue -i DEADBEEF -m $F.msg $F
-CMD $mdir -i $F ::
+#CMD $mdir -i $F ::
+
+rm $F.msg
 
 cd $FATFS
 
 CMD $mcopy -sp -i $FR $(ls --group-directories-first .) ::
-CMD $mdir -i $F -/ ::
+#CMD $mdir -i $F -/ ::
 
-cd -
+#CMD $dd if=/dev/zero bs=$BS count=$((OF)) of=$IMAGE 2>/dev/null
+#cat $F >> $IMAGE
+CMD $dd if=$F bs=$BS seek=$((OF)) of=$IMAGE 2>/dev/null
 
+echo "label:dos" | $sfdisk -q $IMAGE
+echo "$OF, " | $sfdisk -q $IMAGE -a
+sfdisk --part-type $IMAGE 1 e
+
+cd - 1>/dev/null
