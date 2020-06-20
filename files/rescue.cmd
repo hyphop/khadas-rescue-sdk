@@ -78,9 +78,9 @@ else
 fi
 
 ## emmc MAINLINE UBOOT 
-test "$fdtfile" = "amlogic/meson-sm1-khadas-vim3l.dtb" && setenv Cdtb $DTB3L
-test "$fdtfile" = "amlogic/meson-gxl-s905x-khadas-vim.dtb" && setenv Cdtb $DTB1
-test "$fdtfile" = "amlogic/meson-gxm-khadas-vim2.dtb" && setenv Cdtb $DTB1
+test "$fdtfile" = "amlogic/meson-sm1-khadas-vim3l.dtb"       && setenv Cdtb $DTB3L
+test "$fdtfile" = "amlogic/meson-gxl-s905x-khadas-vim.dtb"   && setenv Cdtb $DTB1
+test "$fdtfile" = "amlogic/meson-gxm-khadas-vim2.dtb"        && setenv Cdtb $DTB2
 test "$fdtfile" = "amlogic/meson-g12b-a311d-khadas-vim3.dtb" && setenv Cdtb $DTB3
 test "$fdtfile" = "amlogic/meson-g12b-s922x-khadas-vim3.dtb" && setenv Cdtb $DTB31
 
