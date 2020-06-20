@@ -9,4 +9,20 @@
 DONE_=$(date +%s)
 DURATION_=$((DONE_-BEGIN_))
 
+#unsquashfs -s $ROOTFS_IMAGE
+
+squashfs_date=$(which squashfs_date)
+SQUASHFS_TIME=$(squashfs_date "$ROOTFS_IMAGE")
+SQUASHFS_DATE=$(TZ= date -d @$SQUASHFS_TIME)
+SQUASHFS_MD5=$(md5sum $ROOTFS_IMAGE)
+SQUASHFS_MD5=${SQUASHFS_MD5%% *}
+SQUASHFS_SIZE=$(echo $(du -bL "$ROOTFS_IMAGE"))
+SQUASHFS_SIZE=${SQUASHFS_SIZE%% *}
+
+echo "
+squashfs-time: $SQUASHFS_TIME
+squashfs-date: $SQUASHFS_DATE
+squashfs-size: $SQUASHFS_SIZE
+squashfs-md5:  $SQUASHFS_MD5
+"
 echo "[i] IS DONE // duration: $DURATION_ s"
