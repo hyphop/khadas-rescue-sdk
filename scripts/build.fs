@@ -61,7 +61,7 @@ for q in $rescue/fdt/*/*kresq.dtb; do
     qn=${qq%-kresq*}
     qd="$FDTQ/${qn%/*}"
     qf="$FDTQ/$qn"
-    echo "$qd"
+#   echo "$qd"
     [ -d "$qd" ] || mkdir -p $qd
     mv "$q" "$qf.dtb"
 done
