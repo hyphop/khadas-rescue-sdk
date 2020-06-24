@@ -34,16 +34,19 @@ F="$IMAGE.vfat"
 
 FR=$(realpath "$IMAGE.vfat")
 
+SQUASHFS_TIME=$(squashfs_date "$ROOTFS_IMAGE")
+SQUASHFS_DATE=$(TZ= date -d @$SQUASHFS_TIME)
+
 (
 printf "\n##KRESCUE_INFO\n"
 echo "hash: $HASH"
-echo "date: $DATE"
-echo "time: $TIME"
+echo "date: $SQUASHFS_DATE"
+echo "time: $SQUASHFS_TIME"
 echo "size: $S"
 echo "part: $PART_"
 echo "builder: hyphop"
 printf "\n##KRESCUE-INFO\n"
-) > $F.msg
+) | tee $F.msg
 
 CMD $dd if=/dev/zero bs=$BS count=$((IS/BS - OF)) of=$F 2>/dev/null
 CMD $mkfs_vfat -n rescue -i DEADBEEF -m $F.msg $F

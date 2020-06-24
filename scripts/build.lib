@@ -16,7 +16,7 @@ PR="$0"               #PR - current file rel path
 #. $DR/build.lib
 
 case $PATH in
-    */opt/bin:*);;
+    *$DA*);;
     *)PATH="$DA/../opt/bin:$DA:$PATH";;
 esac
 
@@ -41,13 +41,12 @@ sfdisk=$(which sfdisk)
 [ "$DOWNLOADS" ] || \
     mkdir -p "$DOWNLOADS"
 
-export DOWNLOADS="$DOWNLOADS"
-
 
 
 R=
 DL() {
     R=
+    DOWNLOADS="$DOWNLOADS" \
     . "$DA/download"
 }
 

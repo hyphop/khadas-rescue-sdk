@@ -1,0 +1,24 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= build krescue rootfs
+
+## USAGE: ./build
+
+. $(dirname "$0")/build.lib
+
+echo "[i] build rootfs  ">&2
+
+#ls -l1 
+
+cd "$DA"
+
+[ -s $ROOTFS_DST/scripts/build ] || {
+    echo "PREPARE ROOTFS REP"
+    FAIL temp fail
+}
+
+$ROOTFS_DST/scripts/build
+#$ROOTFS_DST/scripts/build -rr
+

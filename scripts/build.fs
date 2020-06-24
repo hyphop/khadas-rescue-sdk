@@ -2,7 +2,7 @@
 
 ## hyphop ##
 
-#= build krescue rootfs
+#= build krescue fs for fat sd image
 
 ## USAGE: ./build
 
@@ -48,6 +48,8 @@ rescue=rescue
 
 [ -d "$rescue" ] && \
 rm -rf $rescue
+
+[ -s $ROOTFS_UIMAGE ] || FAIL build rootfs first
 
 FDTQ=$rescue/fdt.kresq
 

@@ -2,7 +2,7 @@
 
 ## hyphop ##
 
-#= build krescue rootfs
+#= build krescue images for all boards
 
 ## USAGE: ./build
 
@@ -11,6 +11,30 @@
 echo "[i] MAKE BOARDS IMAGES ">&2
 
 cd "$KTMP" || FAIL oops 
+
+SQUASHFS_TIME=$(squashfs_date "$ROOTFS_IMAGE")
+SQUASHFS_DATE=$(TZ= date -d @$SQUASHFS_TIME)
+
+SQUASHFS_DATE2=
+for d in $SQUASHFS_DATE; do
+    SQUASHFS_DATE2="${SQUASHFS_DATE2}_$d"
+done
+SQUASHFS_DATE2=${SQUASHFS_DATE2#_}
+
+echo $SQUASHFS_DATE2
+
+gzip=$(which pigz)
+
+[ "$gzip" ] || gzip=$(which gzip)
+[ "$gzip" ] || FAIL gzip not found
+
+pack_gz(){
+    ln -s "$1" "$3"
+    $gzip -1c "$3" > "$2"
+    rm "$3"
+}
+
+gz_meta="time.$SQUASHFS_TIME.date.$SQUASHFS_DATE2.$IMAGE_UNI"
 
 for B in $BOARDS; do
     U=$UBOOTS/$B.u-boot.sd.bin
@@ -25,11 +49,12 @@ for B in $BOARDS; do
 	## FIX UBOOT
 	dd if=$U count=1 bs=444 conv=fsync,notrunc of=$O 2>/dev/null
 	##
-	pigz -1c "$O" > "$O.gz"
+	#pigz -1c "$O" > "$O.gz"
+	pack_gz "$O" "$O.gz" "board.$B.$gz_meta"
 #	rm "$O"
     }
 done
 
-pigz -1c "$IMAGE" > "$IMAGE.gz"
+pack_gz "$IMAGE" "$IMAGE.gz" "board.Khadas.$gz_meta"
 #
 cd - 1>/dev/null
