@@ -28,12 +28,12 @@ dtb_mem_addr=0x1000000
 
 #passw=khadas\
 
-rescue_custom=\
-ap_ssid=Krescue\
-ap_passw=12345678\
-wifi_mode=2g\
-script=sd:launcher.sh\
-eth_hw=C0:4A:00:C0:3F:DB\
+#rescue_custom=\
+#ap_ssid=Krescue\
+#ap_passw=12345678\
+#wifi_mode=2g\
+#script=sd:launcher.sh\
+#eth_hw=C0:4A:00:C0:3F:DB\
 
 #script=sd:sd2ram.sh\
 

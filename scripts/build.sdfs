@@ -84,6 +84,8 @@ CP  $FILES/*_env.txt \
     $FILES/rescue.cmd \
     $rescue
 
+echo rescue_custom=kresq_type=sd >> $rescue/80_user_env.txt
+
 ####
 
 cd - >/dev/null
