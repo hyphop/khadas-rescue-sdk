@@ -19,6 +19,6 @@ cd "$DA"
     FAIL temp fail
 }
 
-$ROOTFS_DST/scripts/build
+$ROOTFS_DST/scripts/build $@
 #$ROOTFS_DST/scripts/build -rr
 

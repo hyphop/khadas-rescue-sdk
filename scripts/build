@@ -6,13 +6,31 @@
 
 ## USAGE: ./build
 
+USAGE(){ echo "build - krescue build system
+
+# ARGS
+
+    -u 	opkg offline mode
+    -r 	refresh opkg meta info
+    -rr refresh + opkg cache
+
+    -h|--help
+
+"
+exit 
+}
+
 . $0.lib
 
 for p in $@; do
-
     case $p in
 	-u)
 	OPKG_NO_UPDATE=1
+	;;
+	-r|-rr)
+	;;
+	-h|--help)
+	USAGE
 	;;
 	*)
 	echo "[w] unknown param $p">&2
@@ -35,7 +53,7 @@ done
 
 . $PR.begin
 
-. $PR.rootfs
+. $PR.rootfs || FAIL rootfs
 . $PR.sdfs
 
 . $PR.sdimage
