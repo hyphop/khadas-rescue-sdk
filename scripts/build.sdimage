@@ -39,11 +39,11 @@ SQUASHFS_DATE=$(TZ= date -d @$SQUASHFS_TIME)
 
 (
 printf "\n##KRESCUE_INFO\n"
-echo "hash: $HASH"
+#echo "hash: $HASH"
 echo "date: $SQUASHFS_DATE"
 echo "time: $SQUASHFS_TIME"
-echo "size: $S"
-echo "part: $PART_"
+#echo "size: $S"
+#echo "part: $PART_"
 echo "builder: hyphop"
 printf "\n##KRESCUE-INFO\n"
 ) | tee $F.msg

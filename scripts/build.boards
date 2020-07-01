@@ -28,18 +28,26 @@ gzip=$(which pigz)
 [ "$gzip" ] || gzip=$(which gzip)
 [ "$gzip" ] || FAIL gzip not found
 
+SZ_TPL="size.000000000"
+
 pack_gz(){
-    ln -s "$1" "$3"
+    # compress by meta name - stored in gzip header
+    ln -sf "$1" "$3"
     $gzip -9c "$3" > "$2"
+    # get compressed size and put in header as meta data
+    SZ_=$(printf "%-${#SZ_TPL}s" size.$(stat -c%s "$2"))
+    sed -i "s/$SZ_TPL/$SZ_/" "$2"
+    #
     rm "$3"
 }
-
-gz_meta="time.$SQUASHFS_TIME.date.$SQUASHFS_DATE2.$IMAGE_UNI"
+				  
 
 [ -s "$IMAGE" ] || {
     [ -s "$IMAGE.gz" ] || FAIL $IMAGE or .gz not found
     $gzip -dc "$IMAGE.gz" > "$IMAGE" || FAIL booom
 }
+
+gz_meta="time.$SQUASHFS_TIME.$SZ_TPL.SIZE.$(stat -c%s "$IMAGE").date.$SQUASHFS_DATE2.$IMAGE_UNI"
 
 for B in $BOARDS; do
     U=$UBOOTS/$B.u-boot.sd.bin
